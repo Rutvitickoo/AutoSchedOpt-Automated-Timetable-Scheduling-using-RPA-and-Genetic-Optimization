@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1522199710521-72d69614c702?fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .bg-overlay {
+      background: rgba(255, 255, 255, 0.95);
+    }
+  </style>
+  <script>
+    function filterTable() {
+      const input = document.getElementById('searchInput').value.toLowerCase();
+      const rows = document.querySelectorAll("#timetableTable tbody tr");
+      rows.forEach(row => {
+        const rowText = row.innerText.toLowerCase();
+        row.style.display = rowText.includes(input) ? '' : 'none';
+      });
+    }
+    function toggleCalendarView() {
+      const table = document.getElementById('tableView');
+      const calendar = document.getElementById('calendarView');
+      table.classList.toggle('hidden');
+      calendar.classList.toggle('hidden');
+    }
+  </script>
+</head>
+<body class="min-h-screen py-10 px-4">
+  <div class="max-w-6xl mx-auto bg-overlay p-8 rounded-lg shadow-xl">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-green-700">Student Dashboard</h1>
+      <a href="/logout" class="text-sm text-green-600 hover:underline">Logout</a>
+    </div>
+
+    <div class="flex justify-between mb-4">
+      <input id="searchInput" type="text" onkeyup="filterTable()" placeholder="Search by subject, teacher, etc." class="p-2 border rounded w-full max-w-md">
+      <button onclick="toggleCalendarView()" class="ml-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Toggle Calendar View</button>
+    </div>
+
+    {% if timetable %}
+      <div id="tableView" class="overflow-auto shadow-md rounded border border-gray-300 mt-4">
+        <h2 class="text-xl font-semibold mb-4 text-green-800">Your Optimized Timetable:</h2>
+        <div id="timetableTable">
+          <div class="overflow-x-auto mt-4 rounded border border-gray-300">
+            <table class="min-w-full table-auto text-left text-sm text-gray-800 bg-white">
+              {{ timetable | safe }}
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div id="calendarView" class="hidden mt-6">
+        <h2 class="text-xl font-semibold mb-4 text-green-800">Weekly Calendar View:</h2>
+        <div class="grid grid-cols-6 gap-4 text-center">
+          <div class="font-bold">Time</div>
+          <div class="font-bold">Monday</div>
+          <div class="font-bold">Tuesday</div>
+          <div class="font-bold">Wednesday</div>
+          <div class="font-bold">Thursday</div>
+          <div class="font-bold">Friday</div>
+
+          {% for hour in ['9:00', '10:00', '11:00', '12:00'] %}
+            <div class="font-semibold">{{ hour }}</div>
+            {% for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'] %}
+              <div class="p-2 border rounded bg-white">{{ calendar.get(day + ' ' + hour, '') | safe }}</div>
+            {% endfor %}
+          {% endfor %}
+        </div>
+      </div>
+    {% else %}
+      <p class="mt-6 text-gray-600">Timetable not available yet. Please contact your administrator.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
