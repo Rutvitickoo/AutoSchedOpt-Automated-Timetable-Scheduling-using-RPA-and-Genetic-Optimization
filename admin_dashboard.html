@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-image: url('https://images.unsplash.com/photo-1529070538774-1843cb3265df?fit=crop&w=1950&q=80');
+      background-size: cover;
+      background-position: center;
+    }
+    .bg-overlay {
+      background: rgba(255, 255, 255, 0.95);
+    }
+  </style>
+</head>
+<body class="min-h-screen py-10 px-4">
+  <div class="max-w-4xl mx-auto bg-overlay p-8 rounded-lg shadow-xl">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-3xl font-bold text-indigo-700">Admin Dashboard</h1>
+      <a href="/logout" class="text-sm text-indigo-600 hover:underline">Logout</a>
+    </div>
+    <form method="POST" enctype="multipart/form-data" class="space-y-4">
+      <label class="block text-lg font-medium text-gray-700">Upload Timetable Excel:</label>
+      <input type="file" name="timetable_file" class="w-full border p-2 rounded bg-white" required>
+      <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white py-2 px-4 rounded">Upload & Generate</button>
+    </form>
+
+    {% if timetable %}
+      <div class="overflow-auto shadow-md rounded border border-gray-300 mt-8">
+        <h2 class="text-xl font-semibold mb-4 text-indigo-800">Optimized Timetable:</h2>
+        <div class="overflow-x-auto mt-4 rounded border border-gray-300">
+          <table class="min-w-full table-auto text-left text-sm text-gray-800 bg-white">
+            {{ timetable | safe }}
+          </table>
+        </div>
+      </div>
+    {% else %}
+      <p class="mt-6 text-gray-600">No timetable has been generated yet.</p>
+    {% endif %}
+  </div>
+</body>
+</html>
